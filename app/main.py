@@ -8,14 +8,18 @@ class Person:
 
 
 def create_person_list(people: list) -> list:
-    result = [Person(data["name"], data["age"])
-              for data in people]
+    result_list = []
+    for data in people:
+        person: Person = Person(data["name"], data["age"])
+        result_list.append(person)
 
-    for per, human in enumerate(people):
-        full = {person.name: person for person in result}
-        if "wife" in human and human["wife"] is not None:
-            result[per].wife = full[human["wife"]]
-        elif "husband" in human and human["husband"] is not None:
-            result[per].husband = full[human["husband"]]
+    for data, person in zip(people, result_list):
+        wife_name = data.get("wife")
+        if wife_name is not None:
+            person.wife = Person.people.get(wife_name)
 
-    return result
+        husband_name = data.get("husband")
+        if husband_name is not None:
+            person.husband = Person.people.get(husband_name)
+
+    return result_list
