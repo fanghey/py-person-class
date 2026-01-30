@@ -1,29 +1,25 @@
-from typing import Optional
-
 class Person:
-    people: dict[str, "Person"] = {}
+    people = {}
 
     def __init__(self, name: str, age: int) -> None:
-        self.name: str = name
-        self.age: int = age
-        self.husband: Optional["Person"] = None
-        self.wife: Optional["Person"] = None
-        Person.people[name] = self
-
-    def __repr__(self) -> str:
-        return f"Person(name='{self.name}', age={self.age})"
+        self.name = name
+        self.age = age
+        Person.people[self.name] = self
 
 
-def create_person_list(people_data: list[dict]) -> list[Person]:
-    # создаём всех людей
-    [Person(person["name"], person["age"]) for person in people_data]
+def create_person_list(people: list) -> list:
+    result_list = []
+    for data in people:
+        person: Person = Person(data["name"], data["age"])
+        result_list.append(person)
 
-    # связываем пары
-    for person in people_data:
-        current_person = Person.people[person["name"]]
-        if "husband" in person and person["husband"]:
-            current_person.husband = Person.people.get(person["husband"])
-        if "wife" in person and person["wife"]:
-            current_person.wife = Person.people.get(person["wife"])
+    for data, person in zip(people, result_list):
+        wife_name = data.get("wife")
+        if wife_name is not None:
+            person.wife = Person.people.get(wife_name)
 
-    return list(Person.people.values())
+        husband_name = data.get("husband")
+        if husband_name is not None:
+            person.husband = Person.people.get(husband_name)
+
+    return result_list
