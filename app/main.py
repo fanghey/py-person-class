@@ -1,22 +1,27 @@
 class Person:
-    def __init__(self, name: str, age: int):
-        self.name = name
-        self.age = age
+    people: dict[str, "Person"] = {}  # словарь всех людей
 
-    def __repr__(self):
+    def __init__(self, name: str, age: int) -> None:
+        self.name: str = name
+        self.age: int = age
+        self.husband: "Person | None" = None
+        self.wife: "Person | None" = None
+        Person.people[name] = self
+
+    def __repr__(self) -> str:
         return f"Person(name='{self.name}', age={self.age})"
 
-    @staticmethod
-    def create_person_list(people: list) -> list:
-        person_list = []
 
-        for item in people:
-            if isinstance(item, tuple):
-                name, age = item
-                person = Person(name, age)
-                person_list.append(person)
-            elif isinstance(item, str):
-                person = Person(item, 0)
-                person_list.append(person)
+def create_person_list(people_data: list[dict]) -> list[Person]:
+    # создаём всех людей
+    [Person(person["name"], person["age"]) for person in people_data]
 
-        return person_list
+    # связываем пары
+    for person in people_data:
+        current_person = Person.people[person["name"]]
+        if "husband" in person and person["husband"]:
+            current_person.husband = Person.people.get(person["husband"])
+        if "wife" in person and person["wife"]:
+            current_person.wife = Person.people.get(person["wife"])
+
+    return list(Person.people.values
