@@ -1,11 +1,13 @@
+from typing import Optional
+
 class Person:
-    people: dict[str, "Person"] = {}  # словарь всех людей
+    people: dict[str, "Person"] = {}
 
     def __init__(self, name: str, age: int) -> None:
         self.name: str = name
         self.age: int = age
-        self.husband: "Person | None" = None
-        self.wife: "Person | None" = None
+        self.husband: Optional["Person"] = None
+        self.wife: Optional["Person"] = None
         Person.people[name] = self
 
     def __repr__(self) -> str:
@@ -24,4 +26,4 @@ def create_person_list(people_data: list[dict]) -> list[Person]:
         if "wife" in person and person["wife"]:
             current_person.wife = Person.people.get(person["wife"])
 
-    return list(Person.people.values
+    return list(Person.people.values())
