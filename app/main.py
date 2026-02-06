@@ -8,11 +8,10 @@ class Person:
 
 
 def create_person_list(people: list) -> list:
-    result_list = []
-    for data in people:
-        person: Person = Person(data["name"], data["age"])
-        result_list.append(person)
+    # 1. Создаём всех людей (list comprehension)
+    result_list = [Person(p["name"], p["age"]) for p in people]
 
+    # 2. Связываем wife / husband после создания всех объектов
     for data, person in zip(people, result_list):
         wife_name = data.get("wife")
         if wife_name is not None:
